@@ -41,9 +41,15 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\ImageColumn::make('image')->width(50)->height(50),
-                Tables\Columns\TextColumn::make('name')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('price')->sortable()->money('try'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->width(50)
+                    ->height(50),
+                Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('price')
+                    ->sortable()
+                    ->money('try'),
             ])
             ->filters([
                 //
