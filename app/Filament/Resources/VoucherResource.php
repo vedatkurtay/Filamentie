@@ -53,6 +53,9 @@ class VoucherResource extends Resource
                 Tables\Columns\TextColumn::make('product.name')
                     ->label('Product')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('payments_count')
+                ->counts('payments')
+                ->label('Times Used'),
             ])
             ->filters([
                 //
