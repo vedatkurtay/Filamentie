@@ -6,6 +6,8 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -13,6 +15,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
@@ -24,7 +27,8 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')->required(),
+                Forms\Components\TextInput::make('email')->required()->email(),
             ]);
     }
 
@@ -46,6 +50,30 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('changePassword')
+                    ->form([
+                        TextInput::make('new_password')
+                            ->label('New Password')
+                            ->required()
+                            ->password()
+                            ->rule(Password::default()),
+
+                        TextInput::make('new_password_confirmation')
+                            ->label('New Password Confirmation')
+                            ->required()
+                            ->password()
+                            ->same('new_password')
+                            ->rule(Password::default()),
+                    ])
+                    ->action(function (User $record,array $data) {
+                        $record->update([
+                            'password' => \Hash::make($data['new_password'])
+                        ]);
+                        Notification::make()
+                            ->title('Saved successfully')
+                            ->success()
+                            ->send();
+                    })
             ])
             ->bulkActions([
             ]);
@@ -62,7 +90,6 @@ class UserResource extends Resource
     {
         return [
             'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
