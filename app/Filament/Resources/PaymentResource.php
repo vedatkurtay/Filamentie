@@ -20,6 +20,10 @@ class PaymentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
+    protected static ?int $navigationSort = 2;
+
+    protected static ?string $navigationGroup = 'E-commerce';
+
     public static function form(Form $form): Form
     {
         return $form
