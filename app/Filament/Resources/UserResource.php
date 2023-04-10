@@ -22,6 +22,7 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Form $form): Form
     {
@@ -102,5 +103,10 @@ class UserResource extends Resource
     public static function canDelete(Model $record): bool
     {
         return false;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email'];
     }
 }
